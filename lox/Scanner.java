@@ -100,6 +100,9 @@ class Scanner {
                     // A comment goes until the end of the line.
                     while (peek() != '\n' && !isAtEnd())
                         advance();
+                } else if (match('*')) {
+                    // A block comment, might have multiple lines
+                    blockComment();
                 } else {
                     addToken(SLASH);
                 }
@@ -154,6 +157,20 @@ class Scanner {
 
         addToken(NUMBER,
                 Double.parseDouble(source.substring(start, current)));
+    }
+
+    private void blockComment() {
+        while (!isAtEnd()) {
+            if (peek() == '*' && peekNext() == '/') {
+                advance();
+                advance();
+                return;
+            }
+            if (peek() == '\n') {
+                line++;
+            }
+            advance();
+        }
     }
 
     private void string() {
