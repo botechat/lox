@@ -160,16 +160,25 @@ class Scanner {
     }
 
     private void blockComment() {
-        while (!isAtEnd()) {
-            if (peek() == '*' && peekNext() == '/') {
-                advance();
-                advance();
+        int level = 1;
+        while (level > 0) {
+            if (isAtEnd()) {
+                Lox.error(line, "Unterminated block comment.");
                 return;
-            }
-            if (peek() == '\n') {
+            } else if (peek() == '/' && peekNext() == '*') {
+                level++;
+                advance();
+                advance();
+            } else if (peek() == '*' && peekNext() == '/') {
+                level--;
+                advance();
+                advance();
+            } else if (peek() == '\n') {
                 line++;
+                advance();
+            } else {
+                advance();
             }
-            advance();
         }
     }
 
