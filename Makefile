@@ -1,10 +1,10 @@
 .PHONY: build run clean
 
 build:
-	rm -f ./lox/Expr.java
 	javac **/*.java
 
 run: build
+	rm -f ./lox/Expr.java
 	java tool.GenerateAst ./lox
 	java lox.Lox
 
